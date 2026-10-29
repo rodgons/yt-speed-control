@@ -62,3 +62,9 @@ One-time setup: add the AMO credentials as repository secrets `AMO_JWT_ISSUER` a
 
     gh secret set AMO_JWT_ISSUER
     gh secret set AMO_JWT_SECRET
+
+## License
+
+Copyright (C) 2026 Rodrigo Silva
+
+Licensed under the GNU General Public License v3.0 or later. See [LICENSE](LICENSE).
