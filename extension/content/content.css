@@ -1,0 +1,186 @@
+/* Overlay on regular videos, styled after YouTube's dark player controls. */
+.ypsc-panel {
+  --ypsc-bg: rgba(15, 15, 15, 0.72);
+  --ypsc-hover: rgba(255, 255, 255, 0.12);
+  --ypsc-active: rgba(255, 255, 255, 0.2);
+  --ypsc-text: #f1f1f1;
+  --ypsc-divider: rgba(255, 255, 255, 0.2);
+
+  position: absolute;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 40px;
+  padding: 0 4px;
+  border-radius: 20px;
+  color: var(--ypsc-text);
+  background: var(--ypsc-bg);
+  backdrop-filter: blur(12px);
+  font: 500 14px/1 "YouTube Sans", Roboto, Arial, sans-serif;
+  user-select: none;
+  animation: ypsc-fade-in 0.1s ease-out;
+}
+
+@keyframes ypsc-fade-in {
+  from { opacity: 0; }
+}
+
+.ypsc-panel[data-position="top-left"] { top: 12px; left: 12px; }
+.ypsc-panel[data-position="top-center"] { top: 12px; left: 50%; transform: translateX(-50%); }
+.ypsc-panel[data-position="top-right"] { top: 12px; right: 12px; }
+/* Bottom positions sit above typical player control bars. */
+.ypsc-panel[data-position="bottom-left"] { bottom: 72px; left: 12px; }
+.ypsc-panel[data-position="bottom-center"] { bottom: 72px; left: 50%; transform: translateX(-50%); }
+.ypsc-panel[data-position="bottom-right"] { bottom: 72px; right: 12px; }
+
+.ypsc-panel[data-mode="none"],
+.ypsc-panel[data-mode="hover"]:not(.ypsc-visible) {
+  display: none !important;
+}
+
+.ypsc-btn {
+  all: unset;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.ypsc-btn:hover { background: var(--ypsc-hover); }
+.ypsc-btn:active { background: var(--ypsc-active); }
+.ypsc-btn:focus-visible { box-shadow: 0 0 0 2px #fff inset; }
+
+.ypsc-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.ypsc-btn.ypsc-speed {
+  width: auto;
+  min-width: 52px;
+  padding: 0 8px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.ypsc-btn.ypsc-settings {
+  margin-left: 4px;
+}
+
+.ypsc-btn.ypsc-settings::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  width: 1px;
+  height: 20px;
+  background: var(--ypsc-divider);
+}
+
+.ypsc-btn.ypsc-settings svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ypsc-no-settings .ypsc-settings {
+  display: none;
+}
+
+/* Tooltips like the player's: dark rounded label below the button. */
+.ypsc-btn[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 9px;
+  border-radius: 4px;
+  white-space: nowrap;
+  color: #fff;
+  background: rgba(28, 28, 28, 0.9);
+  font: 500 12px/1.2 Roboto, Arial, sans-serif;
+  pointer-events: none;
+}
+
+.ypsc-panel[data-position^="bottom"] .ypsc-btn[data-tooltip]:hover::after {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+
+/* Simple mode: just the speed readout. */
+.ypsc-panel[data-mode="simple"] {
+  padding: 0 12px;
+  height: 32px;
+  pointer-events: none;
+}
+
+.ypsc-panel[data-mode="simple"] .ypsc-btn:not(.ypsc-speed) {
+  display: none;
+}
+
+.ypsc-panel[data-mode="simple"] .ypsc-speed {
+  min-width: 0;
+  padding: 0;
+}
+
+/* ---- Shorts ---- */
+
+.ypsc-panel.ypsc-shorts-player {
+  display: none !important;
+}
+
+/* Let our buttons sit in the action bar's own column layout. */
+.ypsc-shorts-group {
+  display: contents;
+}
+
+.ypsc-shorts-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  font: 700 14px/24px "Roboto", system-ui, sans-serif;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ypsc-shorts-time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Only used with the fallback button, where there is no native label to reuse. */
+.ypsc-shorts-time-fallback {
+  display: block;
+  margin: -12px 0 16px;
+  text-align: center;
+  color: var(--yt-spec-text-primary, #fff);
+  font: 400 14px/20px "Roboto", system-ui, sans-serif;
+}
+
+.ypsc-shorts-fallback {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  color: var(--yt-spec-text-primary, #fff);
+  background: var(--yt-spec-badge-chip-background, rgba(255, 255, 255, 0.1));
+  cursor: pointer;
+}
+
+.ypsc-shorts-fallback:hover {
+  filter: brightness(1.2);
+}

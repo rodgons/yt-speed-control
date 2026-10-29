@@ -1,0 +1,7 @@
+dist/
+*.xpi
+*.zip
+node_modules/
+.DS_Store
+Screenshot*.png
+.amo-upload-uuid

@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "YT Speed Control",
+  "version": "1.0.0",
+  "description": "Control video playback speed with the keyboard. Press '+' to speed up, '-' to slow down and '*' to reset.",
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "scripts": [
+      "shared/defaults.js",
+      "background.js"
+    ]
+  },
+  "action": {
+    "default_title": "YT Speed Control settings",
+    "default_icon": "icons/icon.svg"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "css": [
+        "content/content.css"
+      ],
+      "js": [
+        "shared/defaults.js",
+        "content/content.js"
+      ]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{47e5712d-89cd-4e8a-9960-8ffd0258a1d5}",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  }
+}
