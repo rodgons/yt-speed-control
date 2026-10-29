@@ -65,4 +65,4 @@ One-time setup: add the AMO credentials as repository secrets `AMO_JWT_ISSUER` a
 
 Copyright (C) 2026 Rodrigo Silva
 
-Licensed under the GNU General Public License v3.0 or later. See [LICENSE](LICENSE).
+Licensed under the GNU General Public License v3.0 only. See [LICENSE](LICENSE).
