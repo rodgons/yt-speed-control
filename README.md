@@ -29,17 +29,16 @@ Or run `npx web-ext run --source-dir extension`.
 
 Temporary add-ons are removed when Firefox restarts.
 
-## Install permanently
+## Submit to addons.mozilla.org
 
-Release Firefox only installs signed add-ons. Create API credentials at
+The add-on is published as a listed (public) add-on on AMO. Create API credentials at
 https://addons.mozilla.org/developers/addon/api/key/ and run:
 
     ./scripts/sign.sh
 
-It asks for the credentials, signs the add-on as unlisted (private, not shown in the store),
-saves the `.xpi` to `dist/` and opens it in Firefox to install. Bump `version` in
-`extension/manifest.json` before signing again: Mozilla rejects an upload whose version
-has already been signed.
+It asks for the credentials and submits the add-on to AMO for review. Once Mozilla approves
+it, the version is public in the store. Bump `version` in `extension/manifest.json` before
+submitting again: Mozilla rejects an upload whose version has already been submitted.
 
 ## Build
 
@@ -51,11 +50,10 @@ has already been signed.
 Publishing a GitHub release runs `.github/workflows/release.yml`, which:
 
 1. sets the add-on version from the release tag (`v1.2.0` → `1.2.0`),
-2. lints and signs the add-on with Mozilla (unlisted),
-3. attaches `yt-speed-control-<version>.xpi` and `updates.json` to the release.
+2. lints the add-on and submits it to AMO (listed) for review.
 
-Installed copies check `updates.json` from the latest release (via `update_url` in the
-manifest) and update themselves. Each release needs a higher version than the last.
+Once Mozilla approves the version, Firefox updates installed copies from AMO. Each release
+needs a higher version than the last.
 
 One-time setup: add the AMO credentials as repository secrets `AMO_JWT_ISSUER` and
 `AMO_JWT_SECRET`:

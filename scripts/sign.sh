@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Signs YT Speed Control through addons.mozilla.org (unlisted: private, not shown in the store)
-# and opens the signed .xpi in Firefox so it can be installed permanently.
+# Submits YT Speed Control to addons.mozilla.org (listed: public in the store after review).
 #
 # Needs AMO API credentials: https://addons.mozilla.org/developers/addon/api/key/
 set -euo pipefail
@@ -15,10 +14,7 @@ if [[ -z "${WEB_EXT_API_SECRET:-}" ]]; then
 fi
 export WEB_EXT_API_KEY WEB_EXT_API_SECRET
 
-npx --yes web-ext@8 lint --source-dir extension --self-hosted
-npx --yes web-ext@8 sign --source-dir extension --artifacts-dir dist --channel unlisted
+npx --yes web-ext@8 lint --source-dir extension
+npx --yes web-ext@8 sign --source-dir extension --artifacts-dir dist --channel listed --approval-timeout 0
 
-xpi=$(ls -t dist/*.xpi | head -1)
-echo "Signed: $xpi"
-open -a Firefox "$xpi"
-echo "Firefox will ask you to confirm adding YT Speed Control."
+echo "Submitted. Track the review at https://addons.mozilla.org/developers/addons"
