@@ -48,4 +48,4 @@ jobs:
           WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
           WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         # Don't wait for review: listed versions can take days to be approved.
-        run: npx --yes web-ext@8 sign --source-dir extension --artifacts-dir dist --channel listed --approval-timeout 0
+        run: npx --yes web-ext@8 sign --source-dir extension --artifacts-dir dist --channel listed --approval-timeout 0 --amo-metadata amo-metadata.json

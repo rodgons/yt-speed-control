@@ -15,6 +15,6 @@ fi
 export WEB_EXT_API_KEY WEB_EXT_API_SECRET
 
 npx --yes web-ext@8 lint --source-dir extension
-npx --yes web-ext@8 sign --source-dir extension --artifacts-dir dist --channel listed --approval-timeout 0
+npx --yes web-ext@8 sign --source-dir extension --artifacts-dir dist --channel listed --approval-timeout 0 --amo-metadata amo-metadata.json
 
 echo "Submitted. Track the review at https://addons.mozilla.org/developers/addons"
