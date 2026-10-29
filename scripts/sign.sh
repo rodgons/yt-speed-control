@@ -15,7 +15,7 @@ if [[ -z "${WEB_EXT_API_SECRET:-}" ]]; then
 fi
 export WEB_EXT_API_KEY WEB_EXT_API_SECRET
 
-npx --yes web-ext@8 lint --source-dir extension
+npx --yes web-ext@8 lint --source-dir extension --self-hosted
 npx --yes web-ext@8 sign --source-dir extension --artifacts-dir dist --channel unlisted
 
 xpi=$(ls -t dist/*.xpi | head -1)

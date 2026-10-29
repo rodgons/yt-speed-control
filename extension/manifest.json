@@ -44,6 +44,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{47e5712d-89cd-4e8a-9960-8ffd0258a1d5}",
+      "update_url": "https://github.com/rodgons/yt-speed-control/releases/latest/download/updates.json",
       "strict_min_version": "128.0",
       "data_collection_permissions": {
         "required": [

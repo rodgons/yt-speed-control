@@ -1,0 +1,70 @@
+# Signs the add-on with Mozilla (unlisted) whenever a GitHub release is published, then attaches
+# the signed .xpi and an updates.json to the release. Installed copies check updates.json through
+# the manifest's update_url and update themselves.
+#
+# Release tags must be versions, e.g. v1.2.0 (the leading "v" is optional).
+# Needs repository secrets AMO_JWT_ISSUER and AMO_JWT_SECRET
+# (https://addons.mozilla.org/developers/addon/api/key/).
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set version from release tag
+        id: version
+        run: |
+          version="${TAG#v}"
+          if ! [[ "$version" =~ ^[0-9]+(\.[0-9]+){0,3}$ ]]; then
+            echo "::error::Release tag '$TAG' is not a version like v1.2.0"
+            exit 1
+          fi
+          jq --arg v "$version" '.version = $v' extension/manifest.json > manifest.tmp
+          mv manifest.tmp extension/manifest.json
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "id=$(jq -r '.browser_specific_settings.gecko.id' extension/manifest.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Lint
+        run: npx --yes web-ext@8 lint --source-dir extension --self-hosted --warnings-as-errors
+
+      - name: Sign with Mozilla
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          npx --yes web-ext@8 sign --source-dir extension --artifacts-dir dist --channel unlisted
+          mv dist/*.xpi "dist/yt-speed-control-${{ steps.version.outputs.version }}.xpi"
+
+      - name: Write updates.json
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          ADDON_ID: ${{ steps.version.outputs.id }}
+          LINK: https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/yt-speed-control-${{ steps.version.outputs.version }}.xpi
+        run: |
+          jq -n --arg id "$ADDON_ID" --arg v "$VERSION" --arg link "$LINK" \
+            '{addons: {($id): {updates: [{version: $v, update_link: $link}]}}}' > dist/updates.json
+          cat dist/updates.json
+
+      - name: Attach to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" dist/*.xpi dist/updates.json --clobber

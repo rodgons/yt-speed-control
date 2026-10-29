@@ -45,3 +45,20 @@ has already been signed.
 
     npx web-ext lint --source-dir extension
     npx web-ext build --source-dir extension --artifacts-dir dist
+
+## Releases
+
+Publishing a GitHub release runs `.github/workflows/release.yml`, which:
+
+1. sets the add-on version from the release tag (`v1.2.0` → `1.2.0`),
+2. lints and signs the add-on with Mozilla (unlisted),
+3. attaches `yt-speed-control-<version>.xpi` and `updates.json` to the release.
+
+Installed copies check `updates.json` from the latest release (via `update_url` in the
+manifest) and update themselves. Each release needs a higher version than the last.
+
+One-time setup: add the AMO credentials as repository secrets `AMO_JWT_ISSUER` and
+`AMO_JWT_SECRET`:
+
+    gh secret set AMO_JWT_ISSUER
+    gh secret set AMO_JWT_SECRET
